@@ -35,7 +35,7 @@ load_data loads the input data by calling the provided utility.
 You can adjust default values for stemming and lowercase, when we haven't passed in specific values,
 to potentially improve performance.
 """
-def load_data(trainingdir, testdir, stemming=False, lowercase=False, silently=False):
+def load_data(trainingdir, testdir, stemming=True, lowercase=True, silently=False):
     print(f"Stemming: {stemming}")
     print(f"Lowercase: {lowercase}")
     train_set, train_labels, dev_set, dev_labels = reader.load_dataset(trainingdir,testdir,stemming,lowercase,silently)
@@ -47,13 +47,13 @@ Main function for training and predicting with naive bayes.
     You can modify the default values for the Laplace smoothing parameter and the prior for the positive label.
     Notice that we may pass in specific values for these parameters during our testing.
 """
-def naiveBayes(dev_set, train_set, train_labels, laplace=1.0, pos_prior=0.5, silently=False):
+def naiveBayes(dev_set, train_set, train_labels, laplace=10.0, pos_prior=0.8, silently=False):
     print_values(laplace,pos_prior)
 
     # a dictionary to store every count of word type in both negative and positive sets
     word_type_dict = defaultdict(lambda: {0: 0, 1: 0})
     
-    print("training...")
+    # print("training...")
     for doc, label in tqdm(zip(train_set, train_labels), disable=silently):
         for word in doc:
             word_type_dict[word][label] += 1
@@ -70,7 +70,7 @@ def naiveBayes(dev_set, train_set, train_labels, laplace=1.0, pos_prior=0.5, sil
     yhats = []
     denominator_pos = words_pos_count + (word_types_pos_count + 1) * laplace
     denominator_neg = words_neg_count + (word_types_neg_count + 1) * laplace
-    print("testing...")
+    # print("testing...")
     for doc in tqdm(dev_set, disable=silently):
         pos_value = math.log(pos_prior)
         neg_value = math.log(1 - pos_prior)
