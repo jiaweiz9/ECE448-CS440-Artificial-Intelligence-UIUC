@@ -47,7 +47,7 @@ def load_dataset(train_dir, dev_dir, stemming=False, lower_case=False, silently=
     X0 = loadDir(train_dir + '/pos/',stemming, lower_case, silently)
     X1 = loadDir(train_dir + '/neg/',stemming, lower_case, silently)
     X = X0 + X1
-    Y = len(X0) * [1] + len(X1) * [0] # a binary label vector Y where the first len(X0) elements are 1s, and the remaining len(X1) elements are 0s.
+    Y = len(X0) * [1] + len(X1) * [0]
 
     X_test0 = loadDir(dev_dir + '/pos/',stemming, lower_case,silently)
     X_test1 = loadDir(dev_dir + '/neg/',stemming, lower_case,silently)
