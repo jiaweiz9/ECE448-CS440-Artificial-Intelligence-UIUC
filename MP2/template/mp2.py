@@ -1,4 +1,4 @@
-# mp1.py
+# mp2.py
 # ---------------
 # Licensing Information:  You are free to use or extend this projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -14,7 +14,7 @@ import configparser
 import copy
 
 import reader
-import naive_bayes as nb
+import bigram_naive_bayes as nb
 
 """
 This file contains the main application that is run for this MP.
@@ -52,15 +52,15 @@ Main function
 def main(args):
     train_set, train_labels, dev_set, dev_labels = nb.load_data(args.training_dir,args.development_dir,args.stemming,args.lowercase)
     
-    predicted_labels = nb.naiveBayes(dev_set, train_set, train_labels, args.laplace, args.pos_prior)
+    predicted_labels = nb.bigramBayes(dev_set, train_set, train_labels, 
+                                          args.laplace,args.bigram_laplace, args.bigram_lambda,args.pos_prior)
 
     accuracy, false_positive, false_negative, true_positive, true_negative = compute_accuracies(predicted_labels,dev_labels)
     nn = len(dev_labels)
     print_stats(accuracy, false_positive, false_negative, true_positive, true_negative, nn)
 
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='CS440 MP1 Naive Bayes')
+    parser = argparse.ArgumentParser(description='CS440 MP2 Bigram Naive Bayes')
     parser.add_argument('--training', dest='training_dir', type=str, default = 'data/movie_reviews/train',
                         help='the directory of the training data')
     parser.add_argument('--development', dest='development_dir', type=str, default = 'data/movie_reviews/dev',
@@ -73,7 +73,11 @@ if __name__ == "__main__":
                         help='Convert all word to lower case')
     parser.add_argument('--laplace',dest="laplace", type=float, default = 1.0,
                         help='Laplace smoothing parameter')
-    parser.add_argument('--pos_prior',dest="pos_prior", type=float, default = 0.8,
+    parser.add_argument('--bigram_laplace',dest="bigram_laplace", type=float, default = 1.0,
+                        help='Laplace smoothing parameter for bigrams')
+    parser.add_argument('--bigram_lambda',dest="bigram_lambda", type=float, default = 1.0,
+                        help='Weight on bigrams vs. unigrams')
+    parser.add_argument('--pos_prior',dest="pos_prior", type=float, default = 0.5,
                         help='Positive prior, i.e. percentage of test examples that are positive')
 
     args = parser.parse_args()
