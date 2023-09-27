@@ -61,9 +61,9 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CS440 MP2 Bigram Naive Bayes')
-    parser.add_argument('--training', dest='training_dir', type=str, default = 'data/movie_reviews/train',
+    parser.add_argument('--training', dest='training_dir', type=str, default = '../../MP1/template/data/movie_reviews/train',
                         help='the directory of the training data')
-    parser.add_argument('--development', dest='development_dir', type=str, default = 'data/movie_reviews/dev',
+    parser.add_argument('--development', dest='development_dir', type=str, default = '../../MP1/template/data/movie_reviews/dev',
                         help='the directory of the development data')
 
     # When doing final testing, reset the default values below to match your settings in naive_bayes.py
@@ -71,7 +71,7 @@ if __name__ == "__main__":
                         help='Use porter stemmer')
     parser.add_argument('--lowercase',dest="lowercase", type=bool, default=False,
                         help='Convert all word to lower case')
-    parser.add_argument('--laplace',dest="laplace", type=float, default = 1.0,
+    parser.add_argument('--laplace',dest="laplace", type=float, default = 1,
                         help='Laplace smoothing parameter')
     parser.add_argument('--bigram_laplace',dest="bigram_laplace", type=float, default = 1.0,
                         help='Laplace smoothing parameter for bigrams')

@@ -68,10 +68,10 @@ def bigramBayes(dev_set, train_set, train_labels, unigram_laplace=10.0, bigram_l
     neg_bigram_total = sum(neg_bigram_counter.values())
     pos_bigram_types = len(pos_bigram_counter)
     neg_bigram_types = len(neg_bigram_counter)
-    # print("pos_bigram_total:", pos_bigram_total)
-    # print("neg_bigram_total:", neg_bigram_total)
-    # print("pos_bigram_types:", pos_bigram_types)
-    # print("neg_bigram_types:", neg_bigram_types)
+    print("pos_bigram_total:", pos_bigram_total)
+    print("neg_bigram_total:", neg_bigram_total)
+    print("pos_bigram_types:", pos_bigram_types)
+    print("neg_bigram_types:", neg_bigram_types)
 
     pos_unigram_counter = Counter()
     neg_unigram_counter = Counter()
@@ -85,10 +85,10 @@ def bigramBayes(dev_set, train_set, train_labels, unigram_laplace=10.0, bigram_l
     neg_unigram_total = sum(neg_unigram_counter.values())
     pos_unigram_types = len(pos_unigram_counter)
     neg_unigram_types = len(neg_unigram_counter)
-    # print("pos_unigram_total:", pos_unigram_total)
-    # print("neg_unigram_total:", neg_unigram_total)
-    # print("pos_unigram_types:", pos_unigram_types)
-    # print("neg_unigram_types:", neg_unigram_types)
+    print("pos_unigram_total:", pos_unigram_total)
+    print("neg_unigram_total:", neg_unigram_total)
+    print("pos_unigram_types:", pos_unigram_types)
+    print("neg_unigram_types:", neg_unigram_types)
 
     pos_unigram_denominator = pos_unigram_total + (pos_unigram_types + 1) * unigram_laplace
     neg_unigram_denominator = neg_unigram_total + (neg_unigram_types + 1) * unigram_laplace
@@ -99,7 +99,7 @@ def bigramBayes(dev_set, train_set, train_labels, unigram_laplace=10.0, bigram_l
     for doc in tqdm(dev_set, disable=silently):
         pos_unigram_value = math.log(pos_prior)
         neg_unigram_value = math.log(1 - pos_prior)
-        pos_bigram_value = math.log(pos_prior)
+        pos_bigram_value = 0
         neg_bigram_value = math.log(1 - pos_prior)
         # tests for unigram:
         for word in doc:
@@ -122,6 +122,7 @@ def bigramBayes(dev_set, train_set, train_labels, unigram_laplace=10.0, bigram_l
                 neg_bigram_value += math.log(bigram_laplace) - math.log(pos_bigram_denominator)
             else:
                 neg_bigram_value += math.log(neg_bigram_counter[bigram]) - math.log(neg_bigram_denominator)
+        print(pos_bigram_value)
         pos_posibility = (1 - bigram_lambda) * pos_unigram_value + bigram_lambda * pos_bigram_value
         neg_posibility = (1 - bigram_lambda) * neg_unigram_value + bigram_lambda * neg_bigram_value
         yhats.append(1 if pos_posibility > neg_posibility else 0)
