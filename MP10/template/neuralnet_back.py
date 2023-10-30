@@ -51,18 +51,23 @@ class NeuralNet(nn.Module):
             nn.Conv2d(3, 16, kernel_size=5, padding=2), nn.BatchNorm2d(16),
             nn.ReLU(),
             nn.AvgPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(16, 32, kernel_size=3), nn.BatchNorm2d(32),
+            nn.Conv2d(16, 64, kernel_size=3), nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.AvgPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(32, 32, kernel_size=3, padding=1), nn.BatchNorm2d(32),
+            nn.AvgPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(64, 64, kernel_size=3), nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.AvgPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1), nn.BatchNorm2d(64),
+            nn.ReLU(),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1), nn.BatchNorm2d(64),
+            nn.ReLU(),
+            nn.AvgPool2d(kernel_size=2, stride=2),
             nn.Flatten(),
-            nn.Linear(128, 64), nn.ReLU(),
-            nn.Linear(64, 4)
+            nn.Linear(256, 256), nn.ReLU(),
+            nn.Linear(256, 128), nn.ReLU(),
+            nn.Linear(128, 4)
         )
         self.lr = lrate
-        self.optimizer = optim.Adam(self.parameters(), self.lr)
+        self.optimizer = optim.Adam(self.parameters(), self.lr, betas=(0.5, 0.9))
         # raise NotImplementedError("You need to write this part!")
     
     def l2_regular(self, alpha):
@@ -95,7 +100,8 @@ class NeuralNet(nn.Module):
         y_hat = self.forward(x)
         #print(y_hat.shape)
         y = F.one_hot(y, 4).float()
-        
+        #print(y_hat.shape)
+        #print(y.shape)
         loss = self.loss_fn(y_hat, y) + self.l2_regular(0.001)
         self.optimizer.zero_grad()
         loss.backward()
@@ -146,8 +152,8 @@ def fit(train_set,train_labels,dev_set,epochs,batch_size=100):
             #optimizer.step()
         after_loss = net.step(train_set, train_labels)
         loss_list.append([begin_loss, after_loss])
-        #if (i + 1) % 5 == 0:
-            #print(f"epoch:{i + 1}:[{begin_loss}, {after_loss}]")
+        if (i + 1) % 5 == 0:
+            print(f"epoch:{i + 1}:[{begin_loss}, {after_loss}]")
     net.eval()
     with torch.no_grad():
         
@@ -156,5 +162,5 @@ def fit(train_set,train_labels,dev_set,epochs,batch_size=100):
         predicted = torch.argmax(y_hat, dim=1)
         #print(len(predicted))
         predicted_labels = predicted.numpy().astype(int)
-        #print(predicted_labels)
+        print(predicted_labels)
     return loss_list, predicted_labels, net
