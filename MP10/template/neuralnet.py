@@ -48,10 +48,12 @@ class NeuralNet(nn.Module):
         self.loss_fn = loss_fn
         
         self.model = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=5, padding=2), nn.BatchNorm2d(16),
+            nn.Conv2d(3, 16, kernel_size=3, padding=2), 
+            nn.BatchNorm2d(16),
             nn.ReLU(),
             nn.AvgPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(16, 32, kernel_size=3), nn.BatchNorm2d(32),
+            nn.Conv2d(16, 32, kernel_size=3), 
+            nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.AvgPool2d(kernel_size=3, stride=2),
             nn.Conv2d(32, 32, kernel_size=3, padding=1), nn.BatchNorm2d(32),
@@ -94,8 +96,10 @@ class NeuralNet(nn.Module):
         #raise NotImplementedError("You need to write this part!")
         y_hat = self.forward(x)
         #print(y_hat.shape)
-        y = F.one_hot(y, 4).float()
-        
+        #y = F.one_hot(y, 4).float()
+        # print(y_hat)
+        # print(y)
+        #print(self.loss_fn(y_hat, y))
         loss = self.loss_fn(y_hat, y) + self.l2_regular(0.001)
         self.optimizer.zero_grad()
         loss.backward()
@@ -151,7 +155,7 @@ def fit(train_set,train_labels,dev_set,epochs,batch_size=100):
     net.eval()
     with torch.no_grad():
         
-        y_hat = net(dev_set).detach().cpu()
+        y_hat = net(dev_set).cpu()
         #print("yhat:", y_hat)
         predicted = torch.argmax(y_hat, dim=1)
         #print(len(predicted))

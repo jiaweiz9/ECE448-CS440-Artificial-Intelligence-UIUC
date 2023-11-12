@@ -79,6 +79,8 @@ class NeuralNet(nn.Module):
         y = F.one_hot(y, 4).float()
         #print(y_hat.shape)
         #print(y.shape)
+        print(y_hat)
+        print(y)
         loss = self.loss_fn(y_hat, y)
         self.optimizer.zero_grad()
         loss.backward()
